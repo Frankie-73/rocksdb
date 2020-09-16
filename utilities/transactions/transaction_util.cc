@@ -135,45 +135,10 @@ Status TransactionUtil::CheckKey(DBImpl* db_impl, SuperVersion* sv,
   return result;
 }
 
-Status TransactionUtil::CheckKeysForConflicts(DBImpl* db_impl,
-                                              const TransactionKeyMap& key_map,
-                                              bool cache_only) {
+Status TransactionUtil::CheckKeysForConflicts(DBImpl* /*db_impl*/,
+                                              const TransactionKeyMap& /*key_map*/,
+                                              bool /*cache_only*/) {
   Status result;
-
-  for (auto& key_map_iter : key_map) {
-    uint32_t cf_id = key_map_iter.first;
-    const auto& keys = key_map_iter.second;
-
-    SuperVersion* sv = db_impl->GetAndRefSuperVersion(cf_id);
-    if (sv == nullptr) {
-      result = Status::InvalidArgument("Could not access column family " +
-                                       ToString(cf_id));
-      break;
-    }
-
-    SequenceNumber earliest_seq =
-        db_impl->GetEarliestMemTableSequenceNumber(sv, true);
-
-    // For each of the keys in this transaction, check to see if someone has
-    // written to this key since the start of the transaction.
-    for (const auto& key_iter : keys) {
-      const auto& key = key_iter.first;
-      const SequenceNumber key_seq = key_iter.second.seq;
-
-      result = CheckKey(db_impl, sv, earliest_seq, key_seq, key, cache_only);
-
-      if (!result.ok()) {
-        break;
-      }
-    }
-
-    db_impl->ReturnAndCleanupSuperVersion(cf_id, sv);
-
-    if (!result.ok()) {
-      break;
-    }
-  }
-
   return result;
 }
 

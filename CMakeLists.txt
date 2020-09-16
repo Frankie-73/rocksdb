@@ -1284,10 +1284,12 @@ if(WITH_BENCHMARK_TOOLS)
   target_link_libraries(range_del_aggregator_bench
     ${ROCKSDB_LIB} ${GFLAGS_LIB})
 
+if(WITH_TESTS)
   add_executable(table_reader_bench
     table/table_reader_bench.cc)
   target_link_libraries(table_reader_bench
     ${ROCKSDB_LIB} testharness ${GFLAGS_LIB})
+endif()
 
   add_executable(filter_bench
     util/filter_bench.cc)

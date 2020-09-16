@@ -15,6 +15,7 @@
 
 #include <errno.h>
 #include <io.h> // _access
+#include <WinIoCtl.h>
 #include <direct.h> // _rmdir, _mkdir, _getcwd
 #include <sys/types.h>
 #include <sys/stat.h>
